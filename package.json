@@ -1,18 +1,24 @@
 {
-  "name": "nodejs-zoom-clone",
+  "name": "mirotalk",
   "version": "1.0.0",
-  "description": "",
-  "main": "serve.js",
+  "description": "A free WebRTC browser-based video call",
+  "main": "server.js",
   "scripts": {
+    "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/miroslavpejic85/mirotalk"
+  },
+  "author": "Miroslav Pejic",
+  "license": "AGPL-3.0",
+  "homepage": "https://github.com/miroslavpejic85/mirotalk",
   "dependencies": {
-    "ejs": "^3.1.6",
+    "compression": "^1.7.4",
+    "dotenv": "^10.0.0",
     "express": "^4.17.1",
-    "peer": "^0.6.1",
-    "socket.io": "^4.1.2",
-    "uuid": "^8.3.2"
+    "ngrok": "^4.0.1",
+    "socket.io": "^4.1.2"
   }
 }
