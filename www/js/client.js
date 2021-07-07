@@ -23,13 +23,16 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 */
 
-"use strict"; // Executed in strict mode
+"use strict"; // https://www.w3schools.com/js/js_strict.asp
 
 const welcomeImg = "../images/illustration-section-01.svg";
 const shareUrlImg = "../images/illustration-section-01.svg";
 const leaveRoomImg = "../images/illustration-section-01.svg";
 const confirmImg = "../images/illustration-section-01.svg";
 const fileSharingImg = "../images/illustration-section-01.svg";
+const camOffImg = "../images/cam-off.png";
+const audioOffImg = "../images/audio-off.png";
+const kickedOutImg = "../images/kicked-out.png";
 const aboutImg = "../images/about.png";
 const peerLoockupUrl = "https://extreme-ip-lookup.com/json/";
 const avatarApiUrl = "https://eu.ui-avatars.com/api";
@@ -51,35 +54,8 @@ const isMobileDevice = DetectRTC.isMobileDevice;
 const myBrowserName = DetectRTC.browser.name;
 
 // video cam - screen max frame rate
-const videoMaxFrameRate = 30;
-const screenMaxFrameRate = 15;
-
-const qvgaVideo = {
-  width: { exact: 320 },
-  height: { exact: 240 },
-  frameRate: { max: videoMaxFrameRate },
-}; // video cam constraints less bandwidth
-
-const vgaVideo = {
-  width: { exact: 640 },
-  height: { exact: 480 },
-  frameRate: { max: videoMaxFrameRate },
-}; // video cam constraints medium bandwidth
-
-const hdVideo = {
-  width: { exact: 1280 },
-  height: { exact: 720 },
-  frameRate: { max: videoMaxFrameRate },
-}; // video cam constraints haight bandwidth
-
-const fhdVideo = {
-  width: { exact: 1920 },
-  height: { exact: 1080 },
-  frameRate: { max: videoMaxFrameRate },
-}; // video cam constraints very haight bandwidth
-
-const videoFrameRate = { frameRate: { max: videoMaxFrameRate } }; // video cam frame rate
-const screenFrameRate = { frameRate: { max: screenMaxFrameRate } }; // screen sharing video frame rate
+let videoMaxFrameRate = 30;
+let screenMaxFrameRate = 30;
 
 let leftChatAvatar;
 let rightChatAvatar;
@@ -118,7 +94,7 @@ let remoteMediaStream; // peers microphone / webcam
 let remoteMediaControls = false; // enable - disable peers video player controls (default false)
 let peerConnections = {}; // keep track of our peer connections, indexed by peer_id == socket.io id
 let chatDataChannels = {}; // keep track of our peer chat data channels
-let fileSharingDataChannels = {}; // keep track of our peer file sharing data channels
+let fileDataChannels = {}; // keep track of our peer file sharing data channels
 let peerMediaElements = {}; // keep track of our peer <video> tags, indexed by peer_id
 let chatMessages = []; // collect chat messages to save it later if want
 let iceServers = [{ urls: "stun:stun.l.google.com:19302" }]; // backup iceServers
@@ -182,6 +158,7 @@ let emojiPicker;
 let mySettings;
 let mySettingsHeader;
 let tabDevicesBtn;
+let tabBandwidthBtn;
 let tabRoomBtn;
 let tabThemeBtn;
 let mySettingsCloseBtn;
@@ -190,6 +167,9 @@ let myPeerNameSetBtn;
 let audioInputSelect;
 let audioOutputSelect;
 let videoSelect;
+let videoQualitySelect;
+let videoFpsSelect;
+let screenFpsSelect;
 let themeSelect;
 let selectors;
 // my video element
@@ -290,6 +270,7 @@ function getHtmlElementsById() {
   mySettings = getId("mySettings");
   mySettingsHeader = getId("mySettingsHeader");
   tabDevicesBtn = getId("tabDevicesBtn");
+  tabBandwidthBtn = getId("tabBandwidthBtn");
   tabRoomBtn = getId("tabRoomBtn");
   tabThemeBtn = getId("tabThemeBtn");
   mySettingsCloseBtn = getId("mySettingsCloseBtn");
@@ -298,6 +279,9 @@ function getHtmlElementsById() {
   audioInputSelect = getId("audioSource");
   audioOutputSelect = getId("audioOutput");
   videoSelect = getId("videoSource");
+  videoQualitySelect = getId("videoQuality");
+  videoFpsSelect = getId("videoFps");
+  screenFpsSelect = getId("screenFps");
   themeSelect = getId("mirotalkTheme");
   // my conference name, hand, video - audio status
   myVideoParagraph = getId("myVideoParagraph");
@@ -560,7 +544,7 @@ function initPeer() {
   setTheme(mirotalkTheme);
 
   if (!isWebRTCSupported) {
-    userLog("error", "This browser does not support WebRTC!");
+    userLog("error", "This browser seems not supported WebRTC!");
     return;
   }
 
@@ -615,12 +599,7 @@ function whoAreYou() {
         <button id="initVideoBtn" class="fas fa-video" onclick="handleVideo(event, true)"></button>   
       `,
     confirmButtonText: `Join meeting`,
-    showClass: {
-      popup: "animate__animated animate__fadeInDown",
-    },
-    hideClass: {
-      popup: "animate__animated animate__fadeOutUp",
-    },
+    
     inputValidator: (value) => {
       if (!value) {
         return "Please enter your name";
@@ -692,12 +671,7 @@ function welcomeUser() {
     confirmButtonText: `Copy meeting URL`,
     denyButtonText: `Email invite`,
     cancelButtonText: `Close`,
-    showClass: {
-      popup: "animate__animated animate__fadeInDown",
-    },
-    hideClass: {
-      popup: "animate__animated animate__fadeOutUp",
-    },
+    
   }).then((result) => {
     if (result.isConfirmed) {
       copyRoomURL();
@@ -953,7 +927,7 @@ function handleDisconnect() {
     msgerRemovePeer(peer_id);
   }
   chatDataChannels = {};
-  fileSharingDataChannels = {};
+  fileDataChannels = {};
   peerConnections = {};
   peerMediaElements = {};
 }
@@ -985,7 +959,7 @@ function handleRemovePeer(config) {
   msgerRemovePeer(peer_id);
 
   delete chatDataChannels[peer_id];
-  delete fileSharingDataChannels[peer_id];
+  delete fileDataChannels[peer_id];
   delete peerConnections[peer_id];
   delete peerMediaElements[peer_id];
 
@@ -1141,7 +1115,6 @@ function setTheme(theme) {
  * Ask user for permission to use the computers microphone and/or camera,
  * attach it to an <audio> or <video> tag if they give us access.
  * https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia
- * https://webrtc.github.io/samples/src/content/getusermedia/resolution/
  *
  * @param {*} callback
  * @param {*} errorback
@@ -1157,9 +1130,15 @@ function setupLocalMedia(callback, errorback) {
 
   console.log("Requesting access to local audio / video inputs");
 
+  // default | qvgaVideo | vgaVideo | hdVideo | fhdVideo | 4kVideo
+  let videoConstraints =
+    myBrowserName === "Firefox"
+      ? getVideoConstraints("useVideo")
+      : getVideoConstraints("default");
+
   const constraints = {
     audio: useAudio,
-    video: myBrowserName === "Firefox" ? useVideo : videoFrameRate, // useVideo | videoFrameRate | qvgaVideo | vgaVideo | hdVideo | fhdVideo
+    video: videoConstraints,
   };
 
   navigator.mediaDevices
@@ -1172,7 +1151,7 @@ function setupLocalMedia(callback, errorback) {
       // https://blog.addpipe.com/common-getusermedia-errors/
       console.error("Access denied for audio/video", err);
       playSound("error");
-      window.location.href = `/permission?roomId=${roomId}&getUserMediaError=${err}`;
+      window.location.href = `/permission?roomId=${roomId}&getUserMediaError=${err.toString()}`;
       if (errorback) errorback();
     });
 } // end [setup_local_stream]
@@ -2009,6 +1988,9 @@ function setupMySettings() {
   tabDevicesBtn.addEventListener("click", (e) => {
     openTab(e, "tabDevices");
   });
+  tabBandwidthBtn.addEventListener("click", (e) => {
+    openTab(e, "tabBandwidth");
+  });
   tabRoomBtn.addEventListener("click", (e) => {
     openTab(e, "tabRoom");
   });
@@ -2019,19 +2001,44 @@ function setupMySettings() {
   selectors = [audioInputSelect, audioOutputSelect, videoSelect];
   audioOutputSelect.disabled = !("sinkId" in HTMLMediaElement.prototype);
   navigator.mediaDevices.enumerateDevices().then(gotDevices).catch(handleError);
-  // select audio in - out
+  // select audio input
   audioInputSelect.addEventListener("change", (e) => {
     myVideoChange = false;
     refreshLocalMedia();
   });
+  // select audio output
   audioOutputSelect.addEventListener("change", (e) => {
     changeAudioDestination();
   });
-  // select video in
+  // select video input
   videoSelect.addEventListener("change", (e) => {
     myVideoChange = true;
     refreshLocalMedia();
   });
+  // select video quality
+  videoQualitySelect.addEventListener("change", (e) => {
+    setLocalVideoQuality();
+  });
+  // select video fps
+  videoFpsSelect.addEventListener("change", (e) => {
+    videoMaxFrameRate = parseInt(videoFpsSelect.value);
+    setLocalMaxFps(videoMaxFrameRate);
+  });
+  // Firefox not support video cam Fps O.o
+  if (myBrowserName === "Firefox") {
+    videoFpsSelect.value = null;
+    videoFpsSelect.disabled = true;
+  }
+  // select screen fps
+  screenFpsSelect.addEventListener("change", (e) => {
+    screenMaxFrameRate = parseInt(screenFpsSelect.value);
+    if (isScreenStreaming) setLocalMaxFps(screenMaxFrameRate);
+  });
+  // Mobile not support screen sharing
+  if (isMobileDevice) {
+    screenFpsSelect.value = null;
+    screenFpsSelect.disabled = true;
+  }
   // select themes
   themeSelect.addEventListener("change", (e) => {
     setTheme(themeSelect.value);
@@ -2052,9 +2059,10 @@ function setupMySettings() {
 function refreshLocalMedia() {
   // some devices can't swap the video track, if already in execution.
   stopLocalVideoTrack();
-  const constraints = getAudioVideoConstraints();
+  stopLocalAudioTrack();
+
   navigator.mediaDevices
-    .getUserMedia(constraints)
+    .getUserMedia(getAudioVideoConstraints())
     .then(gotStream)
     .then(gotDevices)
     .catch(handleError);
@@ -2067,16 +2075,111 @@ function refreshLocalMedia() {
 function getAudioVideoConstraints() {
   const audioSource = audioInputSelect.value;
   const videoSource = videoSelect.value;
+  let videoConstraints = getVideoConstraints(
+    videoQualitySelect.value ? videoQualitySelect.value : "default"
+  );
+  videoConstraints["deviceId"] = videoSource
+    ? { exact: videoSource }
+    : undefined;
   const constraints = {
     audio: { deviceId: audioSource ? { exact: audioSource } : undefined },
-    video: {
-      deviceId: videoSource ? { exact: videoSource } : undefined,
-      frameRate:
-        myBrowserName != "Firefox" ? { max: videoMaxFrameRate } : undefined,
-      // Firefox not support set frameRate (OverconstrainedError) O.o
-    },
+    video: videoConstraints,
   };
   return constraints;
+}
+
+/**
+ * Get video constraints
+ * https://webrtc.github.io/samples/src/content/getusermedia/resolution/
+ *
+ * @returns video constraints
+ */
+function getVideoConstraints(videoQuality) {
+  let frameRate = { max: videoMaxFrameRate };
+
+  switch (videoQuality) {
+    case "useVideo":
+      return useVideo;
+    // Firefox not support set frameRate (OverconstrainedError) O.o
+    case "default":
+      return { frameRate: frameRate };
+    // video cam constraints default
+    case "qvgaVideo":
+      return {
+        width: { exact: 320 },
+        height: { exact: 240 },
+        frameRate: frameRate,
+      }; // video cam constraints low bandwidth
+    case "vgaVideo":
+      return {
+        width: { exact: 640 },
+        height: { exact: 480 },
+        frameRate: frameRate,
+      }; // video cam constraints medium bandwidth
+    case "hdVideo":
+      return {
+        width: { exact: 1280 },
+        height: { exact: 720 },
+        frameRate: frameRate,
+      }; // video cam constraints high bandwidth
+    case "fhdVideo":
+      return {
+        width: { exact: 1920 },
+        height: { exact: 1080 },
+        frameRate: frameRate,
+      }; // video cam constraints very high bandwidth
+    case "4kVideo":
+      return {
+        width: { exact: 3840 },
+        height: { exact: 2160 },
+        frameRate: frameRate,
+      }; // video cam constraints ultra high bandwidth
+  }
+}
+
+/**
+ * Set localMediaStream video max frame rate
+ * https://developer.mozilla.org/en-US/docs/Web/API/MediaStreamTrack/applyConstraints
+ *
+ * @param {*} maxFrameRate
+ */
+function setLocalMaxFps(maxFrameRate) {
+  localMediaStream
+    .getVideoTracks()[0]
+    .applyConstraints({ frameRate: { max: maxFrameRate } })
+    .then(() => {
+      logStreamSettingsInfo("setLocalMaxFps", localMediaStream);
+    })
+    .catch((err) => {
+      console.error("setLocalMaxFps", err);
+      userLog(
+        "error",
+        "Your device doesn't support the selected fps, please select the another one."
+      );
+    });
+}
+
+/**
+ * Set localMediaStream video quality
+ * https://developer.mozilla.org/en-US/docs/Web/API/MediaStreamTrack/applyConstraints
+ */
+function setLocalVideoQuality() {
+  let videoConstraints = getVideoConstraints(
+    videoQualitySelect.value ? videoQualitySelect.value : "default"
+  );
+  localMediaStream
+    .getVideoTracks()[0]
+    .applyConstraints(videoConstraints)
+    .then(() => {
+      logStreamSettingsInfo("setLocalVideoQuality", localMediaStream);
+    })
+    .catch((err) => {
+      console.error("setLocalVideoQuality", err);
+      userLog(
+        "error",
+        "Your device doesn't support the selected video quality, please select the another one."
+      );
+    });
 }
 
 /**
@@ -2149,23 +2252,29 @@ function gotDevices(deviceInfos) {
     const option = document.createElement("option");
     option.value = deviceInfo.deviceId;
 
-    if (deviceInfo.kind === "audioinput") {
-      // audio Input
-      option.text =
-        deviceInfo.label || `microphone ${audioInputSelect.length + 1}`;
-      audioInputSelect.appendChild(option);
-    } else if (deviceInfo.kind === "audiooutput") {
-      // audio Output
-      option.text =
-        deviceInfo.label || `speaker ${audioOutputSelect.length + 1}`;
-      audioOutputSelect.appendChild(option);
-    } else if (deviceInfo.kind === "videoinput") {
-      // video Input
-      option.text = deviceInfo.label || `camera ${videoSelect.length + 1}`;
-      videoSelect.appendChild(option);
-    } else {
-      // something else
-      console.log("Some other kind of source/device: ", deviceInfo);
+    switch (deviceInfo.kind) {
+      case "audioinput":
+        option.text =
+          `🎤 ` + deviceInfo.label ||
+          `🎤 microphone ${audioInputSelect.length + 1}`;
+        audioInputSelect.appendChild(option);
+        break;
+
+      case "audiooutput":
+        option.text =
+          `🔈 ` + deviceInfo.label ||
+          `🔈 speaker ${audioOutputSelect.length + 1}`;
+        audioOutputSelect.appendChild(option);
+        break;
+
+      case "videoinput":
+        option.text =
+          `📹 ` + deviceInfo.label || `📹 camera ${videoSelect.length + 1}`;
+        videoSelect.appendChild(option);
+        break;
+
+      default:
+        console.log("Some other kind of source/device: ", deviceInfo);
     }
   } // end for devices
 
@@ -2185,12 +2294,17 @@ function gotDevices(deviceInfos) {
  * @param {*} err
  */
 function handleError(err) {
-  console.log(
-    "navigator.MediaDevices.getUserMedia error: ",
-    err.message,
-    err.name
-  );
-  userLog("error", "GetUserMedia error " + err);
+  console.log("navigator.MediaDevices.getUserMedia error: ", err);
+  switch (err.name) {
+    case "OverconstrainedError":
+      userLog(
+        "error",
+        "GetUserMedia: Your device doesn't support the selected video quality or fps, please select the another one."
+      );
+      break;
+    default:
+      userLog("error", "GetUserMedia error " + err);
+  }
   // https://blog.addpipe.com/common-getusermedia-errors/
 }
 
@@ -2282,12 +2396,7 @@ async function shareRoomUrl() {
       confirmButtonText: `Copy meeting URL`,
       denyButtonText: `Email invite`,
       cancelButtonText: `Close`,
-      showClass: {
-        popup: "animate__animated animate__fadeInDown",
-      },
-      hideClass: {
-        popup: "animate__animated animate__fadeOutUp",
-      },
+      
     }).then((result) => {
       if (result.isConfirmed) {
         copyRoomURL();
@@ -2430,12 +2539,20 @@ function stopLocalVideoTrack() {
 }
 
 /**
+ * Stop Local Audio Track
+ */
+function stopLocalAudioTrack() {
+  localMediaStream.getAudioTracks()[0].stop();
+}
+
+/**
  * Enable - disable screen sharing
  */
 function toggleScreenSharing() {
+  screenMaxFrameRate = parseInt(screenFpsSelect.value);
   const constraints = {
-    video: screenFrameRate, // true | screenFrameRate
-  };
+    video: { frameRate: { max: screenMaxFrameRate } },
+  }; // true | { frameRate: { max: screenMaxFrameRate } }
 
   let screenMediaPromise;
 
@@ -2456,8 +2573,9 @@ function toggleScreenSharing() {
     }
   } else {
     // on screen sharing stop
-    const constraints = getAudioVideoConstraints();
-    screenMediaPromise = navigator.mediaDevices.getUserMedia(constraints);
+    screenMediaPromise = navigator.mediaDevices.getUserMedia(
+      getAudioVideoConstraints()
+    );
     // if screen sharing accidentally closed
     if (isStreamRecording) {
       stopStreamRecording();
@@ -2551,18 +2669,18 @@ function refreshMyStreamToPeers(stream, localAudioTrackChange = false) {
     // refresh my video stream
     for (let peer_id in peerConnections) {
       // https://developer.mozilla.org/en-US/docs/Web/API/RTCPeerConnection/getSenders
-      let sender = peerConnections[peer_id]
+      let videoSender = peerConnections[peer_id]
         .getSenders()
         .find((s) => (s.track ? s.track.kind === "video" : false));
       // https://developer.mozilla.org/en-US/docs/Web/API/RTCRtpSender/replaceTrack
-      sender.replaceTrack(stream.getVideoTracks()[0]);
+      videoSender.replaceTrack(stream.getVideoTracks()[0]);
 
       if (localAudioTrackChange) {
-        let sender = peerConnections[peer_id]
+        let audioSender = peerConnections[peer_id]
           .getSenders()
           .find((s) => (s.track ? s.track.kind === "audio" : false));
         // https://developer.mozilla.org/en-US/docs/Web/API/RTCRtpSender/replaceTrack
-        sender.replaceTrack(stream.getAudioTracks()[0]);
+        audioSender.replaceTrack(stream.getAudioTracks()[0]);
       }
     }
   }
@@ -2733,7 +2851,7 @@ function downloadRecordedStream() {
     userLog(
       "success-html",
       `<div style="text-align: left;">
-        Recording Info <br/>
+        🔴 Recording Info <br/>
         FILE: ${recFileName} <br/>
         SIZE: ${blobFileSize} <br/>
         Please wait to be processed, then will be downloaded to your ${currentDevice} device.
@@ -2767,6 +2885,11 @@ function disableElements(b) {
   screenShareBtn.disabled = b;
   audioSource.disabled = b;
   videoSource.disabled = b;
+  videoQualitySelect.disabled = b;
+  // FireFox not support set video Fps make it always disabled
+  videoFpsSelect.disabled = myBrowserName === "Firefox" ? true : b;
+  // Mobile devices not support screen sharing so disable it always
+  screenFpsSelect.disabled = isMobileDevice ? true : b;
 }
 
 /**
@@ -2777,6 +2900,29 @@ function createChatDataChannel(peer_id) {
   chatDataChannels[peer_id] = peerConnections[peer_id].createDataChannel(
     "mirotalk_chat_channel"
   );
+  chatDataChannels[peer_id].addEventListener("open", onChatChannelStateChange);
+  chatDataChannels[peer_id].addEventListener("close", onChatChannelStateChange);
+  chatDataChannels[peer_id].addEventListener("error", onChatError);
+}
+
+/**
+ * Handle Chat Room channel state
+ * @param {*} event
+ */
+function onChatChannelStateChange(event) {
+  console.log("onChatChannelStateChange", event.type);
+}
+
+/**
+ * Something wrong on Chat Data Channel
+ * @param {*} event
+ */
+function onChatError(event) {
+  const errMessage = event.error.message;
+  // Transport channel closed ignore it...
+  if (errMessage.includes("closed")) return;
+  console.error("onChatError", event);
+  userLog("error", "Chat data channel error: " + errMessage);
 }
 
 /**
@@ -2828,12 +2974,7 @@ function cleanMessages() {
     showDenyButton: true,
     confirmButtonText: `Yes`,
     denyButtonText: `No`,
-    showClass: {
-      popup: "animate__animated animate__fadeInDown",
-    },
-    hideClass: {
-      popup: "animate__animated animate__fadeOutUp",
-    },
+    
   }).then((result) => {
     // clean chat messages
     if (result.isConfirmed) {
@@ -2930,16 +3071,16 @@ function appendMessage(name, img, side, text, privateMsg) {
   // console.log("chatMessages", chatMessages);
   let ctext = detectUrl(text);
   const msgHTML = `
-	<div class="msg ${side}-msg">
-		<div class="msg-img" style="background-image: url('${img}')"></div>
-		<div class=${msgBubble}>
+  <div class="msg ${side}-msg">
+    <div class="msg-img" style="background-image: url('${img}')"></div>
+    <div class=${msgBubble}>
       <div class="msg-info">
         <div class="msg-info-name">${name}</div>
         <div class="msg-info-time">${time}</div>
       </div>
       <div class="msg-text">${ctext}</div>
     </div>
-	</div>
+  </div>
   `;
   msgerChat.insertAdjacentHTML("beforeend", msgHTML);
   msgerChat.scrollTop += 500;
@@ -3147,7 +3288,7 @@ function hideShowMySettings() {
 /**
  * Handle html tab settings
  * https://www.w3schools.com/howto/howto_js_tabs.asp
- * 
+ *
  * @param {*} evt
  * @param {*} tabName
  */
@@ -3430,6 +3571,7 @@ function disableAllPeers(element) {
   Swal.fire({
     background: swalBackground,
     position: "center",
+    imageUrl: element == "audio" ? audioOffImg : camOffImg,
     title:
       element == "audio"
         ? "Mute everyone except yourself?"
@@ -3441,12 +3583,7 @@ function disableAllPeers(element) {
     showDenyButton: true,
     confirmButtonText: element == "audio" ? `Mute` : `Hide`,
     denyButtonText: `Cancel`,
-    showClass: {
-      popup: "animate__animated animate__fadeInDown",
-    },
-    hideClass: {
-      popup: "animate__animated animate__fadeOutUp",
-    },
+    
   }).then((result) => {
     if (result.isConfirmed) {
       switch (element) {
@@ -3604,12 +3741,7 @@ function confirmCleanBoard() {
     showDenyButton: true,
     confirmButtonText: `Yes`,
     denyButtonText: `No`,
-    showClass: {
-      popup: "animate__animated animate__fadeInDown",
-    },
-    hideClass: {
-      popup: "animate__animated animate__fadeOutUp",
-    },
+    
   }).then((result) => {
     if (result.isConfirmed) {
       whiteboardClean();
@@ -3741,19 +3873,13 @@ function remoteWbAction(action) {
  * @param {*} peer_id
  */
 function createFileSharingDataChannel(peer_id) {
-  fileSharingDataChannels[peer_id] = peerConnections[peer_id].createDataChannel(
+  fileDataChannels[peer_id] = peerConnections[peer_id].createDataChannel(
     "mirotalk_file_sharing_channel"
   );
-  fileSharingDataChannels[peer_id].binaryType = "arraybuffer";
-  fileSharingDataChannels[peer_id].addEventListener(
-    "open",
-    onFSChannelStateChange
-  );
-  fileSharingDataChannels[peer_id].addEventListener(
-    "close",
-    onFSChannelStateChange
-  );
-  fileSharingDataChannels[peer_id].addEventListener("error", onFsError);
+  fileDataChannels[peer_id].binaryType = "arraybuffer";
+  fileDataChannels[peer_id].addEventListener("open", onFSChannelStateChange);
+  fileDataChannels[peer_id].addEventListener("close", onFSChannelStateChange);
+  fileDataChannels[peer_id].addEventListener("error", onFsError);
 }
 
 /**
@@ -3886,9 +4012,9 @@ function sendFileData() {
  * @param {*} data fileReader e.target.result
  */
 function sendFSData(data) {
-  for (let peer_id in fileSharingDataChannels) {
-    if (fileSharingDataChannels[peer_id].readyState === "open") {
-      fileSharingDataChannels[peer_id].send(data);
+  for (let peer_id in fileDataChannels) {
+    if (fileDataChannels[peer_id].readyState === "open") {
+      fileDataChannels[peer_id].send(data);
     }
   }
 }
@@ -3924,12 +4050,7 @@ function selectFileToShare() {
     showDenyButton: true,
     confirmButtonText: `Send`,
     denyButtonText: `Cancel`,
-    showClass: {
-      popup: "animate__animated animate__fadeInDown",
-    },
-    hideClass: {
-      popup: "animate__animated animate__fadeOutUp",
-    },
+    
   }).then((result) => {
     if (result.isConfirmed) {
       fileToSend = result.value;
@@ -4019,12 +4140,7 @@ function endDownload() {
         showDenyButton: true,
         confirmButtonText: `Save`,
         denyButtonText: `Cancel`,
-        showClass: {
-          popup: "animate__animated animate__fadeInDown",
-        },
-        hideClass: {
-          popup: "animate__animated animate__fadeOutUp",
-        },
+        
       }).then((result) => {
         if (result.isConfirmed) {
           saveFileFromBlob();
@@ -4049,12 +4165,7 @@ function endDownload() {
       showDenyButton: true,
       confirmButtonText: `Save`,
       denyButtonText: `Cancel`,
-      showClass: {
-        popup: "animate__animated animate__fadeInDown",
-      },
-      hideClass: {
-        popup: "animate__animated animate__fadeOutUp",
-      },
+      
     }).then((result) => {
       if (result.isConfirmed) {
         saveFileFromBlob();
@@ -4106,12 +4217,7 @@ function kickOut(peer_id, peerKickOutBtn) {
     showDenyButton: true,
     confirmButtonText: `Yes`,
     denyButtonText: `No`,
-    showClass: {
-      popup: "animate__animated animate__fadeInDown",
-    },
-    hideClass: {
-      popup: "animate__animated animate__fadeOutUp",
-    },
+    
   }).then((result) => {
     if (result.isConfirmed) {
       // send peer to kick out from room
@@ -4140,7 +4246,7 @@ function kickedOut(config) {
     allowOutsideClick: false,
     background: swalBackground,
     position: "center",
-    icon: "warning",
+    imageUrl: kickedOutImg,
     title: "You will be kicked out!",
     html:
       `<h2 style="color: red;">` +
@@ -4164,12 +4270,6 @@ function kickedOut(config) {
     willClose: () => {
       clearInterval(timerInterval);
     },
-    showClass: {
-      popup: "animate__animated animate__fadeInDown",
-    },
-    hideClass: {
-      popup: "animate__animated animate__fadeOutUp",
-    },
   }).then(() => {
     window.location.href = "/newcall";
   });
@@ -4190,16 +4290,15 @@ function getAbout() {
     imageUrl: aboutImg,
     html: `
     <br/>
-    <div id="about"><b>open source</b> project on<a href="https://github.com/miroslavpejic85/mirotalk" target="_blank"><h1><strong> GitHub </strong></h1></a></div>
-    <div id="author"><a href="https://www.linkedin.com/in/miroslav-pejic-976a07101/" target="_blank">Author: Miroslav Pejic</a></div><br>
-    <button id="sponsorBtn" class="far fa-heart pulsate" onclick="window.open('https://github.com/sponsors/miroslavpejic85?o=esb')"> Sponsor</button>
+    <div id="about">
+      <b>Open Source</b> project on
+      <a href="https://github.com/miroslavpejic85/mirotalk" target="_blank"><br/></br>
+      <img alt="mirotalk github" src="../images/github.png"></a><br/><br/>
+      <button id="sponsorBtn" class="far fa-heart pulsate" onclick="window.open('https://github.com/sponsors/miroslavpejic85?o=esb')"> Sponsor</button>
+    </div></br>
+    <div id="author">Author:<a href="https://www.linkedin.com/in/miroslav-pejic-976a07101/" target="_blank"> Miroslav Pejic</a></div>
     `,
-    showClass: {
-      popup: "animate__animated animate__fadeInDown",
-    },
-    hideClass: {
-      popup: "animate__animated animate__fadeOutUp",
-    },
+    
   });
 }
 
@@ -4219,12 +4318,7 @@ function leaveRoom() {
     showDenyButton: true,
     confirmButtonText: `Yes`,
     denyButtonText: `No`,
-    showClass: {
-      popup: "animate__animated animate__fadeInDown",
-    },
-    hideClass: {
-      popup: "animate__animated animate__fadeOutUp",
-    },
+    
   }).then((result) => {
     if (result.isConfirmed) {
       window.location.href = "/newcall";
@@ -4318,12 +4412,7 @@ function userLog(type, message) {
         icon: "error",
         title: "Oops...",
         text: message,
-        showClass: {
-          popup: "animate__animated animate__fadeInDown",
-        },
-        hideClass: {
-          popup: "animate__animated animate__fadeOutUp",
-        },
+        
       });
       playSound("error");
       break;
@@ -4334,12 +4423,7 @@ function userLog(type, message) {
         icon: "info",
         title: "Info",
         text: message,
-        showClass: {
-          popup: "animate__animated animate__fadeInDown",
-        },
-        hideClass: {
-          popup: "animate__animated animate__fadeOutUp",
-        },
+        
       });
       break;
     case "success":
@@ -4349,12 +4433,7 @@ function userLog(type, message) {
         icon: "success",
         title: "Success",
         text: message,
-        showClass: {
-          popup: "animate__animated animate__fadeInDown",
-        },
-        hideClass: {
-          popup: "animate__animated animate__fadeOutUp",
-        },
+        
       });
       break;
     case "success-html":
@@ -4364,12 +4443,7 @@ function userLog(type, message) {
         icon: "success",
         title: "Success",
         html: message,
-        showClass: {
-          popup: "animate__animated animate__fadeInDown",
-        },
-        hideClass: {
-          popup: "animate__animated animate__fadeOutUp",
-        },
+        
       });
       break;
     case "toast":
