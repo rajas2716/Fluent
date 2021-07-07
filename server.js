@@ -35,7 +35,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 "use strict"; // https://www.w3schools.com/js/js_strict.asp
 
-require("dotenv").config();
+require("dotenv").config(); //Loads all the env variables into process environment
 
 const compression = require("compression");
 const express = require("express");
@@ -63,7 +63,7 @@ let turnUsername = process.env.TURN_USERNAME;
 let turnCredential = process.env.TURN_PASSWORD;
 
 // Use all static files from the www folder
-app.use(express.static(path.join(__dirname, "www")));
+app.use(express.static(path.join(__dirname, "www"))); //All static files inside www folder are public now
 
 // Api parse body data as json
 app.use(express.json());

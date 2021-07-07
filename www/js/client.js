@@ -23,7 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 */
 
-"use strict"; // https://www.w3schools.com/js/js_strict.asp
+"use strict"; // Executed in strict mode
 
 const welcomeImg = "../images/illustration-section-01.svg";
 const shareUrlImg = "../images/illustration-section-01.svg";

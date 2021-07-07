@@ -2,7 +2,20 @@
 <html lang="en">
   <head>
     <title>Mirotalk WebRTC Video call, Chat Room & Screen Sharing.</title>
-    
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-3XM60XK9RQ"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "G-3XM60XK9RQ");
+    </script>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta
       name="viewport"
@@ -10,7 +23,7 @@
     />
     <meta
       name="description"
-      content="Fluent powered by WebRTC, Real-time Simple Secure Fast video calls, chat and screen sharing capabilities in the browser, from your mobile or desktop."
+      content="Mirotalk powered by WebRTC, Real-time Simple Secure Fast video calls, chat and screen sharing capabilities in the browser, from your mobile or desktop."
     />
     <meta
       name="keywords"
@@ -24,13 +37,13 @@
       property="og:description"
       content="Free WebRTC browser-based video call."
     />
-    <meta property="og:image" content="/images/flower.png" />
+    <meta property="og:image" content="/images/mirotalk.png" />
     <meta property="og:url" content="https://mirotalk.herokuapp.com/" />
     <link
       rel="icon"
       type="image/png"
       sizes="32x32"
-      href="/images/flower.png"
+      href="/images/favicon.png"
     />
     <!-- mirotalk css -->
     <link rel="stylesheet" href="/css/client.css" />
@@ -44,15 +57,15 @@
   </head>
 
   <body onload="initPeer()">
-    <!-- SEO Optimization -->
+    <!-- just 4SEO Optimization -->
     <div id="webRTCSeo"><h1>WebRTC</h1></div>
 
     <!-- show this before to join -->
     <div id="loadingDiv">
       <h1 class="pulsate">Loading...</h1>
       <pre>
-            Please allow camera & microphone
-            access to use this app.
+Please allow camera & microphone
+access to use this app.
       </pre>
     </div>
 
@@ -72,6 +85,7 @@
       <button id="whiteboardBtn" class="fas fa-chalkboard-teacher"></button>
       <button id="fileShareBtn" class="fas fa-folder-open"></button>
       <button id="mySettingsBtn" class="fas fa-cogs"></button>
+      <button id="aboutBtn" class="fas fa-question"></button>
       <button id="leaveRoomBtn" class="fas fa-phone-slash"></button>
     </div>
     <!-- End left buttons -->
@@ -112,6 +126,61 @@
               </div>
 
               <div class="msg-text">Public message example</div>
+            </div>
+          </div>
+
+          <div class="msg right-msg">
+            <div
+              class="msg-img"
+              style="
+                background-image: url('https://eu.ui-avatars.com/api?name=Your Name&size=24&background=random&rounded=true');
+              "
+            ></div>
+
+            <div class="msg-bubble">
+              <div class="msg-info">
+                <div class="msg-info-name">Your Name</div>
+                <div class="msg-info-time">00:00:00</div>
+              </div>
+
+              <div class="msg-text">Public message example</div>
+            </div>
+          </div>
+
+          <!-- private message example -->
+          <div class="msg left-msg">
+            <div
+              class="msg-img"
+              style="
+                background-image: url('https://eu.ui-avatars.com/api?name=Friends Name&size=24&background=random&rounded=true');
+              "
+            ></div>
+
+            <div class="private-msg-bubble">
+              <div class="msg-info">
+                <div class="msg-info-name">Friends Name</div>
+                <div class="msg-info-time">00:00:00</div>
+              </div>
+
+              <div class="msg-text">Private message example</div>
+            </div>
+          </div>
+
+          <div class="msg right-msg">
+            <div
+              class="msg-img"
+              style="
+                background-image: url('https://eu.ui-avatars.com/api?name=Your Name&size=24&background=random&rounded=true');
+              "
+            ></div>
+
+            <div class="private-msg-bubble">
+              <div class="msg-info">
+                <div class="msg-info-name">Your Name</div>
+                <div class="msg-info-time">00:00:00</div>
+              </div>
+
+              <div class="msg-text">Private message example</div>
             </div>
           </div>
         </main>
@@ -169,11 +238,13 @@
         <br />
         <div class="tab">
           <button id="tabDevicesBtn" class="tablinks">Devices</button>
+          <button id="tabBandwidthBtn" class="tablinks">Bandwidth</button>
           <button id="tabRoomBtn" class="tablinks">Room</button>
           <button id="tabThemeBtn" class="tablinks">Theme</button>
         </div>
 
         <div id="tabDevices" class="tabcontent">
+          <br />
           <div>
             <label for="audioSource">Audio input:&nbsp;</label><br />
             <select id="audioSource"></select>
@@ -188,10 +259,46 @@
             <label for="videoSource">Video source:&nbsp;</label><br />
             <select id="videoSource"></select>
           </div>
+        </div>
+
+        <div id="tabBandwidth" class="tabcontent">
           <br />
+          <label for="videoQuality">Video quality:&nbsp;</label>
+          <br/>
+          <select id="videoQuality">
+            <option value="default">default</option>
+            <option value="qvgaVideo">low</option>
+            <option value="vgaVideo">medium</option>
+            <option value="hdVideo">high</option>
+            <option value="fhdVideo">very high</option>
+            <option value="4kVideo">ultra high</option>
+          </select>
+          <br /><br />
+          <label for="videoFps">Video fps:&nbsp;</label>
+          <br />
+          <select id="videoFps">
+            <option value="30">30 fps</option>
+            <option value="25">25 fps</option>
+            <option value="20">20 fps</option>
+            <option value="15">15 fps</option>
+            <option value="10">10 fps</option>
+            <option value="5">5 fps</option>
+          </select>
+          <br /><br />
+          <label for="screenFps">Screen fps:&nbsp;</label>
+          <br />
+          <select id="screenFps">
+            <option value="30">30 fps</option>
+            <option value="25">25 fps</option>
+            <option value="20">20 fps</option>
+            <option value="15">15 fps</option>
+            <option value="10">10 fps</option>
+            <option value="5">5 fps</option>
+          </select>
         </div>
 
         <div id="tabRoom" class="tabcontent">
+          <br />
           <div>
             <label>My name:&nbsp;</label><br />
             <input
@@ -216,6 +323,7 @@
         </div>
 
         <div id="tabTheme" class="tabcontent">
+          <br />
           <label for="mirotalkTheme">Select:&nbsp;</label>
           <br />
           <select id="mirotalkTheme">
@@ -292,7 +400,7 @@
     <!-- end of Js scripts -->
 
     <!-- 
-		the <video> and <audio> tags are all added and removed dynamically
-		in 'onAddStream', 'setupLocalMedia', and 'removePeer'/'disconnect'
-		--></body>
+    the <video> and <audio> tags are all added and removed dynamically
+    in 'onAddStream', 'setupLocalMedia', and 'removePeer'/'disconnect'
+    --></body>
 </html>
