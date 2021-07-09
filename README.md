@@ -24,7 +24,7 @@
 
 ## Quick start
 
-- You will need to have [Node.js](https://nodejs.org/en/blog/release/v12.22.1/) installed, this project has been tested with Node version 12.X
+- You will need to have Nodejs installed.
 - Clone this repo
 
 ```bash

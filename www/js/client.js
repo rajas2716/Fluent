@@ -1,38 +1,12 @@
-/*
- ██████ ██      ██ ███████ ███    ██ ████████ 
-██      ██      ██ ██      ████   ██    ██    
-██      ██      ██ █████   ██ ██  ██    ██    
-██      ██      ██ ██      ██  ██ ██    ██    
- ██████ ███████ ██ ███████ ██   ████    ██   
+"use strict"; // Strict mode enabled
 
-Mirotalk Browser Client
-Copyright (C) 2021 Miroslav Pejic <miroslav.pejic.85@gmail.com>
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as published
-by the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
-
-"use strict"; // https://www.w3schools.com/js/js_strict.asp
-
-const welcomeImg = "../images/illustration-section-01.svg";
 const shareUrlImg = "../images/illustration-section-01.svg";
 const leaveRoomImg = "../images/illustration-section-01.svg";
 const confirmImg = "../images/illustration-section-01.svg";
 const fileSharingImg = "../images/illustration-section-01.svg";
 const camOffImg = "../images/cam-off.png";
 const audioOffImg = "../images/audio-off.png";
-const kickedOutImg = "../images/kicked-out.png";
-const aboutImg = "../images/about.png";
 const peerLoockupUrl = "https://extreme-ip-lookup.com/json/";
 const avatarApiUrl = "https://eu.ui-avatars.com/api";
 const notifyBySound = true; // turn on - off sound notifications
@@ -46,7 +20,6 @@ const notifyRecStop = "../audio/recStop.mp3";
 const notifyRaiseHand = "../audio/raiseHand.mp3";
 const notifyError = "../audio/error.mp3";
 const fileSharingInput = "*"; // allow all file extensions
-// "image/*,.mp3,.doc,.docs,.txt,.pdf,.xls,.xlsx,.csv,.pcap,.xml,.json,.md,.html,.js,.css,.php,.py,.sh,.zip,.rar,.tar"; // "*"
 
 const isWebRTCSupported = DetectRTC.isWebRTCSupported;
 const isMobileDevice = DetectRTC.isMobileDevice;
@@ -129,7 +102,6 @@ let myHandBtn;
 let whiteboardBtn;
 let fileShareBtn;
 let mySettingsBtn;
-let aboutBtn;
 let leaveRoomBtn;
 // chat room elements
 let msgerDraggable;
@@ -241,7 +213,6 @@ function getHtmlElementsById() {
   fileShareBtn = getId("fileShareBtn");
   myHandBtn = getId("myHandBtn");
   mySettingsBtn = getId("mySettingsBtn");
-  aboutBtn = getId("aboutBtn");
   leaveRoomBtn = getId("leaveRoomBtn");
   // chat Room elements
   msgerDraggable = getId("msgerDraggable");
@@ -360,10 +331,6 @@ function setButtonsTitle() {
   });
   tippy(mySettingsBtn, {
     content: "Show settings",
-    placement: "right-start",
-  });
-  tippy(aboutBtn, {
-    content: "Show about",
     placement: "right-start",
   });
   tippy(leaveRoomBtn, {
@@ -541,7 +508,6 @@ function thereIsPeerConnections() {
  * On body load Get started
  */
 function initPeer() {
-  setTheme(mirotalkTheme);
 
   if (!isWebRTCSupported) {
     userLog("error", "This browser seems not supported WebRTC!");
@@ -591,7 +557,6 @@ function whoAreYou() {
     background: swalBackground,
     position: "center",
     imageAlt: "mirotalk-name",
-    imageUrl: welcomeImg,
     title: "Enter your name",
     input: "text",
     html: `<br>
@@ -658,7 +623,6 @@ function welcomeUser() {
     position: "center",
     title: "<strong>Welcome " + myPeerName + "</strong>",
     imageAlt: "mirotalk-welcome",
-    imageUrl: welcomeImg,
     html:
       `
       <br/> 
@@ -970,145 +934,7 @@ function handleRemovePeer(config) {
  * Set mirotalk theme neon - dark - forest - sky - ghost
  * @param {*} theme
  */
-function setTheme(theme) {
-  if (!theme) return;
 
-  mirotalkTheme = theme;
-  switch (mirotalkTheme) {
-    case "neon":
-      // neon theme
-      swalBackground = "rgba(0, 0, 0, 0.7)";
-      document.documentElement.style.setProperty("--body-bg", "black");
-      document.documentElement.style.setProperty("--msger-bg", "black");
-      document.documentElement.style.setProperty("--msger-private-bg", "black");
-      document.documentElement.style.setProperty("--left-msg-bg", "#da05f3");
-      document.documentElement.style.setProperty("--private-msg-bg", "#f77070");
-      document.documentElement.style.setProperty("--right-msg-bg", "#579ffb");
-      document.documentElement.style.setProperty("--wb-bg", "#000000");
-      document.documentElement.style.setProperty("--wb-hbg", "#000000");
-      document.documentElement.style.setProperty("--btn-bg", "white");
-      document.documentElement.style.setProperty("--btn-color", "black");
-      document.documentElement.style.setProperty("--btn-opc", "1");
-      document.documentElement.style.setProperty("--btns-left", "20px");
-      document.documentElement.style.setProperty(
-        "--my-settings-label-color",
-        "limegreen"
-      );
-      document.documentElement.style.setProperty(
-        "--box-shadow",
-        "3px 3px 6px #0500ff, -3px -3px 6px #da05f3"
-      );
-      break;
-    case "dark":
-      // dark theme
-      swalBackground = "rgba(0, 0, 0, 0.7)";
-      document.documentElement.style.setProperty("--body-bg", "#16171b");
-      document.documentElement.style.setProperty("--msger-bg", "#16171b");
-      document.documentElement.style.setProperty(
-        "--msger-private-bg",
-        "#16171b"
-      );
-      document.documentElement.style.setProperty("--left-msg-bg", "#222328");
-      document.documentElement.style.setProperty("--private-msg-bg", "#f77070");
-      document.documentElement.style.setProperty("--right-msg-bg", "#0a0b0c");
-      document.documentElement.style.setProperty("--wb-bg", "#000000");
-      document.documentElement.style.setProperty("--wb-hbg", "#000000");
-      document.documentElement.style.setProperty("--btn-bg", "white");
-      document.documentElement.style.setProperty("--btn-color", "black");
-      document.documentElement.style.setProperty("--btn-opc", "1");
-      document.documentElement.style.setProperty("--btns-left", "20px");
-      document.documentElement.style.setProperty(
-        "--my-settings-label-color",
-        "limegreen"
-      );
-      document.documentElement.style.setProperty(
-        "--box-shadow",
-        "3px 3px 6px #0a0b0c, -3px -3px 6px #222328"
-      );
-      break;
-    case "forest":
-      // forest theme
-      swalBackground = "rgba(0, 0, 0, 0.7)";
-      document.documentElement.style.setProperty("--body-bg", "black");
-      document.documentElement.style.setProperty("--msger-bg", "black");
-      document.documentElement.style.setProperty("--msger-private-bg", "black");
-      document.documentElement.style.setProperty("--left-msg-bg", "#2e3500");
-      document.documentElement.style.setProperty("--private-msg-bg", "#f77070");
-      document.documentElement.style.setProperty("--right-msg-bg", "#004b1c");
-      document.documentElement.style.setProperty("--wb-bg", "#000000");
-      document.documentElement.style.setProperty("--wb-hbg", "#000000");
-      document.documentElement.style.setProperty("--btn-bg", "white");
-      document.documentElement.style.setProperty("--btn-color", "black");
-      document.documentElement.style.setProperty("--btn-opc", "1");
-      document.documentElement.style.setProperty("--btns-left", "20px");
-      document.documentElement.style.setProperty(
-        "--my-settings-label-color",
-        "limegreen"
-      );
-      document.documentElement.style.setProperty(
-        "--box-shadow",
-        "3px 3px 6px #27944f, -3px -3px 6px #14843d"
-      );
-      break;
-    case "sky":
-      // sky theme
-      swalBackground = "rgba(0, 0, 0, 0.7)";
-      document.documentElement.style.setProperty("--body-bg", "black");
-      document.documentElement.style.setProperty("--msger-bg", "black");
-      document.documentElement.style.setProperty("--msger-private-bg", "black");
-      document.documentElement.style.setProperty("--left-msg-bg", "#0c95b7");
-      document.documentElement.style.setProperty("--private-msg-bg", "#f77070");
-      document.documentElement.style.setProperty("--right-msg-bg", "#012a5f");
-      document.documentElement.style.setProperty("--wb-bg", "#000000");
-      document.documentElement.style.setProperty("--wb-hbg", "#000000");
-      document.documentElement.style.setProperty("--btn-bg", "white");
-      document.documentElement.style.setProperty("--btn-color", "black");
-      document.documentElement.style.setProperty("--btn-opc", "1");
-      document.documentElement.style.setProperty("--btns-left", "20px");
-      document.documentElement.style.setProperty(
-        "--my-settings-label-color",
-        "#03a5ce"
-      );
-      document.documentElement.style.setProperty(
-        "--box-shadow",
-        "3px 3px 6px #03a5ce, -3px -3px 6px #03a5ce"
-      );
-      break;
-    case "ghost":
-      // ghost theme
-      swalBackground = "rgba(0, 0, 0, 0.150)";
-      document.documentElement.style.setProperty("--body-bg", "black");
-      document.documentElement.style.setProperty("--msger-bg", "transparent");
-      document.documentElement.style.setProperty("--msger-private-bg", "black");
-      document.documentElement.style.setProperty("--wb-bg", "#000000");
-      document.documentElement.style.setProperty("--wb-hbg", "#000000");
-      document.documentElement.style.setProperty("--btn-bg", "transparent");
-      document.documentElement.style.setProperty("--btn-color", "white");
-      document.documentElement.style.setProperty("--btn-opc", "0.7");
-      document.documentElement.style.setProperty("--btns-left", "20px");
-      document.documentElement.style.setProperty("--box-shadow", "0px");
-      document.documentElement.style.setProperty(
-        "--my-settings-label-color",
-        "limegreen"
-      );
-      document.documentElement.style.setProperty(
-        "--left-msg-bg",
-        "rgba(0, 0, 0, 0.7)"
-      );
-      document.documentElement.style.setProperty(
-        "--private-msg-bg",
-        "rgba(252, 110, 110, 0.7)"
-      );
-      document.documentElement.style.setProperty(
-        "--right-msg-bg",
-        "rgba(0, 0, 0, 0.7)"
-      );
-      break;
-    // ...
-    default:
-      console.log("No theme found");
-  }
-}
 
 /**
  * Setup local media stuff
@@ -1154,7 +980,7 @@ function setupLocalMedia(callback, errorback) {
       window.location.href = `/permission?roomId=${roomId}&getUserMediaError=${err.toString()}`;
       if (errorback) errorback();
     });
-} // end [setup_local_stream]
+} // Catch errors while setting up the local devices (web cam and microphone)
 
 /**
  * Load Local Media Stream obj
@@ -1610,7 +1436,6 @@ function manageLeftButtons() {
   setMyWhiteboardBtn();
   setMyFileShareBtn();
   setMySettingsBtn();
-  setAboutBtn();
   setLeaveRoomBtn();
   showLeftButtonsAndMenu();
 }
@@ -1956,11 +1781,7 @@ function setMySettingsBtn() {
 /**
  * About button click event
  */
-function setAboutBtn() {
-  aboutBtn.addEventListener("click", (e) => {
-    getAbout();
-  });
-}
+
 
 /**
  * Leave room button click event
@@ -2447,7 +2268,6 @@ function copyRoomURL() {
 
 /**
  * Share room id by email
- * @param {*} message email | subject | body
  */
 function shareRoomByEmail(message) {
   let email = message.email;
@@ -4246,7 +4066,6 @@ function kickedOut(config) {
     allowOutsideClick: false,
     background: swalBackground,
     position: "center",
-    imageUrl: kickedOutImg,
     title: "You will be kicked out!",
     html:
       `<h2 style="color: red;">` +
@@ -4287,7 +4106,6 @@ function getAbout() {
     position: "center",
     title: "<strong>WebRTC Made with ❤️</strong>",
     imageAlt: "mirotalk-about",
-    imageUrl: aboutImg,
     html: `
     <br/>
     <div id="about">
