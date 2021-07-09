@@ -351,6 +351,7 @@ body {
   padding: 4px;
   border-radius: 5px;
   opacity: var(--btn-opc);
+  cursor: pointer;
 }
 
 #leftButtons button:focus {

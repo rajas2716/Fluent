@@ -1,5 +1,5 @@
 {
-  "name": "mirotalk",
+  "name": "fluent",
   "version": "1.0.0",
   "description": "A free WebRTC browser-based video call",
   "main": "server.js",
@@ -9,11 +9,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/miroslavpejic85/mirotalk"
+    "url": "git+https://github.com/rajas2716/Video---Chat-Application"
   },
   "author": "Miroslav Pejic",
   "license": "AGPL-3.0",
-  "homepage": "https://github.com/miroslavpejic85/mirotalk",
+  "homepage": "https://github.com/rajas2716/Video---Chat-Application",
   "dependencies": {
     "compression": "^1.7.4",
     "dotenv": "^10.0.0",

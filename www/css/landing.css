@@ -1,5 +1,9 @@
 @import url("https://fonts.googleapis.com/css?family=Fira+Sans:600|Lato:400&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800&display=swap');
+*{
+
+}
 html {
   line-height: 1.15;
   -ms-text-size-adjust: 100%;
@@ -1347,7 +1351,9 @@ textarea.form-input {
   line-height: 22px;
   margin-top: 8px;
 }
-
+.form-group-desktop input{
+  border-radius: 3px;
+}
 @media (max-width: 640px) {
   .form-group-desktop .form-input {
     margin-bottom: 12px;
@@ -2425,7 +2431,7 @@ textarea.form-input {
 
 .features-tiles .tiles-item {
   flex-basis: 360px;
-  max-width: 360px;
+  max-width: 100px;
   padding: 16px;
 }
 
@@ -2714,7 +2720,7 @@ ul.pricing-item-features-list li {
 
 .features-tiles-item-image {
   display: inline-flex;
-  border-radius: 50%;
+  border-radius:  5%;
   background: radial-gradient(
     circle at bottom,
     #00FCFF 0%,
@@ -2722,7 +2728,30 @@ ul.pricing-item-features-list li {
     #FFFFFF 100%
   );
 }
-
+@keyframes example{
+  from{filter: invert(100%);}
+  to{ filter: invert(0%);
+  }
+}
+@keyframes back{
+  from{filter: invert(0%);}
+  to{ filter: invert(100%);
+  }
+}
+.features-tiles-item-content h4{
+  font-family: Quicksand;
+}
+.features-tiles-item-image img{
+  filter: invert(100%);
+  animation-name: back;
+  animation-duration: 0.5s;
+  cursor: pointer;
+}
+.features-tiles-item-image img:hover{
+  filter:  invert(0%);
+  animation-name: example;
+  animation-duration: 0.5s;
+}
 .pricing .tiles-item-inner {
   background: #292b32;
 }
@@ -3486,39 +3515,3 @@ img.has-shadow {
     justify-content: center;
   }
 }
-
-/*Pulse Button*/
-.pulse {
-  box-shadow: 0 0 0 rgba(120, 120, 120, 0.4);
-  animation: pulse 4s infinite;
-}
-.pulse:hover {
-  animation: none;
-}
-
-@-webkit-keyframes pulse {
-  0% {
-    -webkit-box-shadow: 0 0 0 0 rgba(120, 120, 120, 0.4);
-  }
-  70% {
-    -webkit-box-shadow: 0 0 0 15px rgba(120, 120, 120, 0);
-  }
-  100% {
-    -webkit-box-shadow: 0 0 0 0 rgba(120, 120, 120, 0);
-  }
-}
-@keyframes pulse {
-  0% {
-    -moz-box-shadow: 0 0 0 0 rgba(120, 120, 120, 0.4);
-    box-shadow: 0 0 0 0 rgba(120, 120, 120, 0.4);
-  }
-  70% {
-    -moz-box-shadow: 0 0 0 10px rgba(120, 120, 120, 0);
-    box-shadow: 0 0 0 15px rgba(120, 120, 120, 0);
-  }
-  100% {
-    -moz-box-shadow: 0 0 0 0 rgba(120, 120, 120, 0);
-    box-shadow: 0 0 0 0 rgba(120, 120, 120, 0);
-  }
-}
-/*Pulse Button*/
