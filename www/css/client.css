@@ -311,8 +311,195 @@ body {
 }
 
 /*--------------------------------------------------------------
-# Left buttons
+# Left buttons & Bottom Buttons
 --------------------------------------------------------------*/
+#topleft{
+  z-index: 1;
+  position: absolute;
+  left: 5vw;
+  top: 10%;
+  -webkit-transform: translate(0%, -50%);
+  -ms-transform: translate(0%, -50%);
+  transform: translate(0%, -50%);
+  border-radius: 20px;
+  background: transparent;
+  padding: 15px;
+  flex-direction: row;
+  justify-content: space-around;
+  grid-gap: 0.3rem;
+  width: 120px;
+  -webkit-animation: fadeIn ease-in 1;
+  -moz-animation: fadeIn ease-in 1;
+  animation: fadeIn ease-in 1;
+  -webkit-animation-fill-mode: forwards;
+  -moz-animation-fill-mode: forwards;
+  animation-fill-mode: forwards;
+  -webkit-animation-duration: 1s;
+  -moz-animation-duration: 1s;
+  animation-duration: 1s;
+  overflow: hidden;
+}
+
+#topleft button{
+  border: none;
+  font-size: 1.5rem;
+  transition: all 0.3s ease-in-out;
+  background: var(--btn-bg);
+  padding: 4px;
+  border-radius: 5px;
+  opacity: var(--btn-opc);
+  cursor: pointer;
+}
+
+#topright{
+  z-index: 1;
+  position: absolute;
+  left: 86vw;
+  top: 10%;
+  -webkit-transform: translate(0%, -50%);
+  -ms-transform: translate(0%, -50%);
+  transform: translate(0%, -50%);
+  border-radius: 20px;
+  background: transparent;
+  padding: 15px;
+  flex-direction: row;
+  justify-content: space-around;
+  grid-gap: 0.3rem;
+  width: 120px;
+  -webkit-animation: fadeIn ease-in 1;
+  -moz-animation: fadeIn ease-in 1;
+  animation: fadeIn ease-in 1;
+  -webkit-animation-fill-mode: forwards;
+  -moz-animation-fill-mode: forwards;
+  animation-fill-mode: forwards;
+  -webkit-animation-duration: 1s;
+  -moz-animation-duration: 1s;
+  animation-duration: 1s;
+  overflow: hidden;
+}
+
+#topright button{
+  border: none;
+  font-size: 1.5rem;
+  transition: all 0.3s ease-in-out;
+  background: var(--btn-bg);
+  padding: 4px;
+  border-radius: 5px;
+  opacity: var(--btn-opc);
+  cursor: pointer;
+}
+
+#bottomleft{
+  z-index: 1;
+  position: absolute;
+  left: 5vw;
+  top: 90%;
+  -webkit-transform: translate(0%, -50%);
+  -ms-transform: translate(0%, -50%);
+  transform: translate(0%, -50%);
+  border-radius: 20px;
+  background: transparent;
+  padding: 15px;
+  flex-direction: row;
+  justify-content: space-around;
+  grid-gap: 0.3rem;
+  width: 120px;
+  -webkit-animation: fadeIn ease-in 1;
+  -moz-animation: fadeIn ease-in 1;
+  animation: fadeIn ease-in 1;
+  -webkit-animation-fill-mode: forwards;
+  -moz-animation-fill-mode: forwards;
+  animation-fill-mode: forwards;
+  -webkit-animation-duration: 1s;
+  -moz-animation-duration: 1s;
+  animation-duration: 1s;
+  overflow: hidden;
+}
+
+#bottomleft button{
+  border: none;
+  font-size: 1.5rem;
+  transition: all 0.3s ease-in-out;
+  background: var(--btn-bg);
+  padding: 4px;
+  border-radius: 5px;
+  opacity: var(--btn-opc);
+  cursor: pointer;
+}
+#bottomright{
+  z-index: 1;
+  position: absolute;
+  left: 90vw;
+  top: 90%;
+  -webkit-transform: translate(0%, -50%);
+  -ms-transform: translate(0%, -50%);
+  transform: translate(0%, -50%);
+  border-radius: 20px;
+  background: transparent;
+  padding: 15px;
+  flex-direction: row;
+  justify-content: space-around;
+  grid-gap: 0.3rem;
+  width: 25px;
+  -webkit-animation: fadeIn ease-in 1;
+  -moz-animation: fadeIn ease-in 1;
+  animation: fadeIn ease-in 1;
+  -webkit-animation-fill-mode: forwards;
+  -moz-animation-fill-mode: forwards;
+  animation-fill-mode: forwards;
+  -webkit-animation-duration: 1s;
+  -moz-animation-duration: 1s;
+  animation-duration: 1s;
+  overflow: hidden;
+}
+
+#bottomright button{
+  border: none;
+  font-size: 1.5rem;
+  transition: all 0.3s ease-in-out;
+  background: var(--btn-bg);
+  padding: 4px;
+  border-radius: 5px;
+  opacity: var(--btn-opc);
+  cursor: pointer;
+}
+#bottomButtons{
+  z-index: 1;
+  position: absolute;
+  left: 45vw;
+  top: 90%;
+  -webkit-transform: translate(0%, -50%);
+  -ms-transform: translate(0%, -50%);
+  transform: translate(0%, -50%);
+  border-radius: 20px;
+  background: transparent;
+  padding: 15px;
+  flex-direction: row;
+  justify-content: space-around;
+  grid-gap: 0.3rem;
+  width: 120px;
+  -webkit-animation: fadeIn ease-in 1;
+  -moz-animation: fadeIn ease-in 1;
+  animation: fadeIn ease-in 1;
+  -webkit-animation-fill-mode: forwards;
+  -moz-animation-fill-mode: forwards;
+  animation-fill-mode: forwards;
+  -webkit-animation-duration: 1s;
+  -moz-animation-duration: 1s;
+  animation-duration: 1s;
+  overflow: hidden;
+}
+
+#bottomButtons button{
+  border: none;
+  font-size: 1.5rem;
+  transition: all 0.3s ease-in-out;
+  background: var(--btn-bg);
+  padding: 4px;
+  border-radius: 5px;
+  opacity: var(--btn-opc);
+  cursor: pointer;
+}
 
 #leftButtons {
   z-index: 12;
@@ -325,7 +512,6 @@ body {
   transform: translate(0%, -50%);
   border-radius: 20px;
   background: transparent;
-  box-shadow: var(--box-shadow);
   padding: 15px;
   flex-direction: column;
   justify-content: space-around;
@@ -387,26 +573,45 @@ body {
   color: var(--btn-color);
 }
 
+#fullScreenBtn:hover{
+  color: skyblue;
+  transform: var(--btns-hover-scale);
+}
+
+#recordStreamBtn:hover{
+  color: red;
+  transform: var(--btns-hover-scale);
+}
+
+#shareRoomBtn:hover{
+  color: lightskyblue;
+  transform: var(--btns-hover-scale);
+}
+
+#screenShareBtn:hover{
+  color: #10F0ED;
+}
+
 #initAudioBtn:hover,
 #initVideoBtn:hover,
-#shareRoomBtn:hover,
 #audioBtn:hover,
 #videoBtn:hover,
-#screenShareBtn:hover,
-#recordStreamBtn:hover,
-#fullScreenBtn:hover,
 #swapCameraBtn:hover,
 #chatRoomBtn:hover,
-#myHandBtn:hover,
-#fileShareBtn:hover,
-#whiteboardBtn:hover,
-#mySettingsBtn:hover,
 #aboutBtn:hover {
   color: rgb(8, 189, 89);
   transform: var(--btns-hover-scale);
 }
-#leaveRoomBtn:hover {
-  color: red;
+
+#myHandBtn:hover {
+  color: yellow;
+  transform: var(--btns-hover-scale);
+}
+
+#leaveRoomBtn:hover,
+#fileShareBtn:hover,
+#whiteboardBtn:hover,
+#mySettingsBtn:hover {
   transform: var(--btns-hover-scale);
 }
 

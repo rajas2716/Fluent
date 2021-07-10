@@ -6,19 +6,8 @@ const leaveRoomImg = "../images/illustration-section-01.svg";
 const confirmImg = "../images/illustration-section-01.svg";
 const fileSharingImg = "../images/illustration-section-01.svg";
 const camOffImg = "../images/cam-off.png";
-const audioOffImg = "../images/audio-off.png";
 const peerLoockupUrl = "https://extreme-ip-lookup.com/json/";
 const avatarApiUrl = "https://eu.ui-avatars.com/api";
-const notifyBySound = true; // turn on - off sound notifications
-const notifyAddPeer = "../audio/addPeer.mp3";
-const notifyDownload = "../audio/download.mp3";
-const notifyKickedOut = "../audio/kickedOut.mp3";
-const notifyRemovePeer = "../audio/removePeer.mp3";
-const notifyNewMessage = "../audio/newMessage.mp3";
-const notifyRecStart = "../audio/recStart.mp3";
-const notifyRecStop = "../audio/recStop.mp3";
-const notifyRaiseHand = "../audio/raiseHand.mp3";
-const notifyError = "../audio/error.mp3";
 const fileSharingInput = "*"; // allow all file extensions
 
 const isWebRTCSupported = DetectRTC.isWebRTCSupported;
@@ -90,6 +79,7 @@ let initAudioBtn;
 let initVideoBtn;
 // left buttons
 let leftButtons;
+let bottomButtons;
 let shareRoomBtn;
 let audioBtn;
 let videoBtn;
@@ -201,6 +191,7 @@ function getHtmlElementsById() {
   myVideoAvatarImage = getId("myVideoAvatarImage");
   // left buttons
   leftButtons = getId("leftButtons");
+  bottomButtons = getId("bottomButtons")
   shareRoomBtn = getId("shareRoomBtn");
   audioBtn = getId("audioBtn");
   videoBtn = getId("videoBtn");
@@ -550,7 +541,7 @@ function handleConnect() {
  * set your name for the conference
  */
 function whoAreYou() {
-  playSound("newMessage");
+  
 
   Swal.fire({
     allowOutsideClick: false,
@@ -617,7 +608,7 @@ function joinToChannel() {
  */
 function welcomeUser() {
   const myRoomUrl = window.location.href;
-  playSound("newMessage");
+  
   Swal.fire({
     background: swalBackground,
     position: "center",
@@ -685,7 +676,6 @@ function handleAddPeer(config) {
   if (config.should_create_offer) {
     handleRtcOffer(peer_id);
   }
-  playSound("addPeer");
 }
 
 /**
@@ -927,7 +917,6 @@ function handleRemovePeer(config) {
   delete peerConnections[peer_id];
   delete peerMediaElements[peer_id];
 
-  playSound("removePeer");
 }
 
 /**
@@ -976,7 +965,6 @@ function setupLocalMedia(callback, errorback) {
     .catch((err) => {
       // https://blog.addpipe.com/common-getusermedia-errors/
       console.error("Access denied for audio/video", err);
-      playSound("error");
       window.location.href = `/permission?roomId=${roomId}&getUserMediaError=${err.toString()}`;
       if (errorback) errorback();
     });
@@ -1142,7 +1130,7 @@ function loadRemoteMediaStream(event, peers, peer_id) {
   remoteVideoParagraph.appendChild(peerVideoText);
   // remote hand status element
   remoteHandStatusIcon.setAttribute("id", peer_id + "_handStatus");
-  remoteHandStatusIcon.style.setProperty("color", "rgb(0, 255, 0)");
+  remoteHandStatusIcon.style.setProperty("color", "yellow");
   remoteHandStatusIcon.className = "fas fa-hand-paper pulsate";
   tippy(remoteHandStatusIcon, {
     content: "Participant hand is RAISED",
@@ -1509,10 +1497,8 @@ function setScreenShareBtn() {
 function setRecordStreamBtn() {
   recordStreamBtn.addEventListener("click", (e) => {
     if (isStreamRecording) {
-      playSound("recStop");
       stopStreamRecording();
     } else {
-      playSound("recStart");
       startStreamRecording();
     }
   });
@@ -2194,7 +2180,6 @@ async function shareRoomUrl() {
     !isSupportedNavigatorShare ||
     (isSupportedNavigatorShare && errorNavigatorShare)
   ) {
-    playSound("newMessage");
     Swal.fire({
       background: swalBackground,
       position: "center",
@@ -2762,7 +2747,6 @@ function setChatRoomForMobile() {
  * Show msger draggable on center screen position
  */
 function showChatRoomDraggable() {
-  playSound("newMessage");
   if (isMobileDevice) {
     leftButtons.style.display = "none";
     isButtonsVisible = false;
@@ -2843,7 +2827,6 @@ function handleDataChannelChat(dataMessages) {
         showChatRoomDraggable();
         chatRoomBtn.className = "fas fa-comment-slash";
       }
-      playSound("newMessage");
       setPeerChatAvatarImgName("left", dataMessages.name);
       appendMessage(
         dataMessages.name,
@@ -3054,7 +3037,6 @@ function emitMsg(name, toName, msg, privateMsg, peer_id) {
  */
 function hideShowEmojiPicker() {
   if (!isChatEmojiVisible) {
-    playSound("newMessage");
     msgerEmojiPicker.style.display = "block";
     isChatEmojiVisible = true;
     return;
@@ -3083,7 +3065,6 @@ function downloadChatMsgs() {
  */
 function hideShowMySettings() {
   if (!isMySettingsVisible) {
-    playSound("newMessage");
     // adapt it for mobile
     if (isMobileDevice) {
       mySettings.style.setProperty("width", "90%");
@@ -3212,7 +3193,6 @@ function setMyHandStatus() {
         placement: "right-start",
       });
     }
-    playSound("rHand");
   }
   myHandStatusIcon.style.display = myHandStatus ? "inline" : "none";
   emitPeerStatus("hand", myHandStatus);
@@ -3290,7 +3270,6 @@ function setPeerHandStatus(peer_id, peer_name, status) {
   peerHandStatus.style.display = status ? "block" : "none";
   if (status) {
     userLog("toast", peer_name + " has raised the hand");
-    playSound("rHand");
   }
 }
 
@@ -3473,7 +3452,6 @@ function whiteboardOpen() {
       content: "CLOSE the whiteboard",
       placement: "right-start",
     });
-    playSound("newMessage");
   }
 }
 
@@ -3551,7 +3529,6 @@ function setEraser() {
  * Clean whiteboard content
  */
 function confirmCleanBoard() {
-  playSound("newMessage");
 
   Swal.fire({
     background: swalBackground,
@@ -3617,7 +3594,6 @@ function fitToContainer(canvas) {
 
 /**
  * Handle whiteboard on windows resize
- * here i lose drawing, Todo fix it
  */
 function reportWindowSize() {
   fitToContainer(canvas);
@@ -3853,7 +3829,6 @@ function abortFileTransfer() {
  * Select the File to Share
  */
 function selectFileToShare() {
-  playSound("newMessage");
 
   Swal.fire({
     allowOutsideClick: false,
@@ -3936,7 +3911,6 @@ function handleFileInfo(config) {
  * https://developer.mozilla.org/en-US/docs/Web/API/Blob
  */
 function endDownload() {
-  playSound("download");
 
   // save received file into Blob
   const blob = new Blob(incomingFileData);
@@ -4058,7 +4032,6 @@ function kickOut(peer_id, peerKickOutBtn) {
 function kickedOut(config) {
   let peer_name = config.peer_name;
 
-  playSound("kickedOut");
 
   let timerInterval;
 
@@ -4099,7 +4072,6 @@ function kickedOut(config) {
  * https://sweetalert2.github.io
  */
 function getAbout() {
-  playSound("newMessage");
 
   Swal.fire({
     background: swalBackground,
@@ -4125,7 +4097,6 @@ function getAbout() {
  * https://sweetalert2.github.io
  */
 function leaveRoom() {
-  playSound("newMessage");
 
   Swal.fire({
     background: swalBackground,
@@ -4232,7 +4203,6 @@ function userLog(type, message) {
         text: message,
         
       });
-      playSound("error");
       break;
     case "info":
       Swal.fire({
@@ -4280,59 +4250,6 @@ function userLog(type, message) {
     // ......
     default:
       alert(message);
-  }
-}
-
-/**
- * Sound notifications
- * https://notificationsounds.com/notification-sounds
- * @param {*} state
- */
-async function playSound(state) {
-  if (!notifyBySound) return;
-
-  let file_audio = "";
-  switch (state) {
-    case "addPeer":
-      file_audio = notifyAddPeer;
-      break;
-    case "download":
-      file_audio = notifyDownload;
-      break;
-    case "kickedOut":
-      file_audio = notifyKickedOut;
-      break;
-    case "removePeer":
-      file_audio = notifyRemovePeer;
-      break;
-    case "newMessage":
-      file_audio = notifyNewMessage;
-      break;
-    case "recStart":
-      file_audio = notifyRecStart;
-      break;
-    case "recStop":
-      file_audio = notifyRecStop;
-      break;
-    case "rHand":
-      file_audio = notifyRaiseHand;
-      break;
-    case "error":
-      file_audio = notifyError;
-      break;
-    // ...
-    default:
-      console.log("no file audio");
-  }
-  if (file_audio != "") {
-    let audioToPlay = new Audio(file_audio);
-    try {
-      await audioToPlay.play();
-    } catch (err) {
-      // console.error("Cannot play sound", err);
-      // Automatic playback failed. (safari)
-      return;
-    }
   }
 }
 

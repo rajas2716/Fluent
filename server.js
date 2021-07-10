@@ -1,37 +1,3 @@
-/*
-http://patorjk.com/software/taag/#p=display&f=ANSI%20Regular&t=Server
-
-███████ ███████ ██████  ██    ██ ███████ ██████  
-██      ██      ██   ██ ██    ██ ██      ██   ██ 
-███████ █████   ██████  ██    ██ █████   ██████  
-     ██ ██      ██   ██  ██  ██  ██      ██   ██ 
-███████ ███████ ██   ██   ████   ███████ ██   ██                                           
-
-dependencies: {
-  compression : https://www.npmjs.com/package/compression
-  dotenv      : https://www.npmjs.com/package/dotenv
-  express     : https://www.npmjs.com/package/express
-  ngrok       : https://www.npmjs.com/package/ngrok
-  socket.io   : https://www.npmjs.com/package/socket.io
-}
-
-Mirotalk Signaling Server
-Copyright (C) 2021 Miroslav Pejic <miroslav.pejic.85@gmail.com>
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as published
-by the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
-*/
 
 "use strict"; // https://www.w3schools.com/js/js_strict.asp
 
@@ -55,12 +21,7 @@ let channels = {}; // collect channels
 let sockets = {}; // collect sockets
 let peers = {}; // collect peers info grp by channels
 
-let ngrokEnabled = process.env.NGROK_ENABLED;
-let ngrokAuthToken = process.env.NGROK_AUTH_TOKEN;
-let turnEnabled = process.env.TURN_ENABLED;
-let turnUrls = process.env.TURN_URLS;
-let turnUsername = process.env.TURN_USERNAME;
-let turnCredential = process.env.TURN_PASSWORD;
+
 
 // Use all static files from the www folder
 app.use(express.static(path.join(__dirname, "www"))); //All static files inside www folder are public now
@@ -193,42 +154,11 @@ function makeId(length) {
  */
 let iceServers = [{ urls: "stun:stun.l.google.com:19302" }];
 
-if (turnEnabled == "true") {
-  iceServers.push({
-    urls: turnUrls,
-    username: turnUsername,
-    credential: turnCredential,
-  });
-}
-
 /**
  * Expose server to external with https tunnel using ngrok
  * https://ngrok.com
  */
-async function ngrokStart() {
-  try {
-    await ngrok.authtoken(ngrokAuthToken);
-    await ngrok.connect(PORT);
-    let api = ngrok.getApi();
-    let data = await api.listTunnels();
-    let pu0 = data.tunnels[0].public_url;
-    let pu1 = data.tunnels[1].public_url;
-    let tunnelHttps = pu0.startsWith("https") ? pu0 : pu1;
-    // server settings
-    logme("settings", {
-      http: localHost,
-      https: tunnelHttps,
-      api_key_secret: API_KEY_SECRET,
-      iceServers: iceServers,
-      ngrok: {
-        ngrok_enabled: ngrokEnabled,
-        ngrok_token: ngrokAuthToken,
-      },
-    });
-  } catch (err) {
-    console.error("[Error] ngrokStart", err);
-  }
-}
+
 
 /**
  * Start Local Server with ngrok https tunnel (optional)
@@ -247,18 +177,12 @@ server.listen(PORT, null, () => {
 	`,
     "font-family:monospace"
   );
-
-  // https tunnel
-  if (ngrokEnabled == "true") {
-    ngrokStart();
-  } else {
-    // server settings
-    logme("settings", {
+  logme("settings", {
       http: localHost,
       api_key_secret: API_KEY_SECRET,
       iceServers: iceServers,
     });
-  }
+  // https tunnel
 });
 
 /**
