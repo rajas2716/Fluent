@@ -315,6 +315,7 @@ body {
 --------------------------------------------------------------*/
 #topleft{
   z-index: 1;
+  display: none;
   position: absolute;
   left: 5vw;
   top: 10%;
@@ -353,6 +354,7 @@ body {
 
 #topright{
   z-index: 1;
+  display: none;
   position: absolute;
   left: 86vw;
   top: 10%;
@@ -391,6 +393,7 @@ body {
 
 #bottomleft{
   z-index: 1;
+  display: none;
   position: absolute;
   left: 5vw;
   top: 90%;
@@ -428,6 +431,7 @@ body {
 }
 #bottomright{
   z-index: 1;
+  display: none;
   position: absolute;
   left: 90vw;
   top: 90%;
@@ -464,7 +468,8 @@ body {
   cursor: pointer;
 }
 #bottomButtons{
-  z-index: 1;
+  z-index: 12;
+  display: none;
   position: absolute;
   left: 45vw;
   top: 90%;
@@ -505,7 +510,7 @@ body {
   z-index: 12;
   display: none;
   position: absolute;
-  left: var(--btns-left);
+  left: 5vw;
   top: 50%;
   -webkit-transform: translate(0%, -50%);
   -ms-transform: translate(0%, -50%);
@@ -1059,7 +1064,6 @@ video:fullscreen {
   background-color: rgba(0, 0, 0, 0.7);
   border-radius: 5px;
   margin: auto;
-  box-shadow: var(--box-shadow);
   padding: 10px;
   /* fade in */
   -webkit-animation: fadeIn ease-in 1;

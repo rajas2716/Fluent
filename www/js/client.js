@@ -80,6 +80,10 @@ let initVideoBtn;
 // left buttons
 let leftButtons;
 let bottomButtons;
+let bottomright;
+let bottomleft;
+let topright;
+let topleft;
 let shareRoomBtn;
 let audioBtn;
 let videoBtn;
@@ -118,7 +122,6 @@ let emojiPicker;
 // my settings
 let mySettings;
 let mySettingsHeader;
-let tabDevicesBtn;
 let tabBandwidthBtn;
 let tabRoomBtn;
 let tabThemeBtn;
@@ -192,6 +195,10 @@ function getHtmlElementsById() {
   // left buttons
   leftButtons = getId("leftButtons");
   bottomButtons = getId("bottomButtons")
+  bottomright = getId("bottomright")
+  bottomleft = getId("bottomleft")
+  topright = getId("topright")
+  topleft = getId("topleft")
   shareRoomBtn = getId("shareRoomBtn");
   audioBtn = getId("audioBtn");
   videoBtn = getId("videoBtn");
@@ -230,7 +237,6 @@ function getHtmlElementsById() {
   // my settings
   mySettings = getId("mySettings");
   mySettingsHeader = getId("mySettingsHeader");
-  tabDevicesBtn = getId("tabDevicesBtn");
   tabBandwidthBtn = getId("tabBandwidthBtn");
   tabRoomBtn = getId("tabRoomBtn");
   tabThemeBtn = getId("tabThemeBtn");
@@ -1426,6 +1432,7 @@ function manageLeftButtons() {
   setMySettingsBtn();
   setLeaveRoomBtn();
   showLeftButtonsAndMenu();
+
 }
 
 /**
@@ -1784,6 +1791,7 @@ function setLeaveRoomBtn() {
 function handleBodyOnMouseMove() {
   document.body.addEventListener("mousemove", (e) => {
     showLeftButtonsAndMenu();
+    showbuttons();
   });
 }
 
@@ -1792,17 +1800,11 @@ function handleBodyOnMouseMove() {
  */
 function setupMySettings() {
   // tab buttons
-  tabDevicesBtn.addEventListener("click", (e) => {
-    openTab(e, "tabDevices");
-  });
   tabBandwidthBtn.addEventListener("click", (e) => {
     openTab(e, "tabBandwidth");
   });
   tabRoomBtn.addEventListener("click", (e) => {
     openTab(e, "tabRoom");
-  });
-  tabThemeBtn.addEventListener("click", (e) => {
-    openTab(e, "tabTheme");
   });
   // audio - video select box
   selectors = [audioInputSelect, audioOutputSelect, videoSelect];
@@ -2141,10 +2143,20 @@ function showLeftButtonsAndMenu() {
   }
   toggleClassElements("statusMenu", "inline");
   leftButtons.style.display = "flex";
+  bottomButtons.style.display = "flex";
+  bottomright.style.display = "flex";
+  bottomleft.style.display = "flex";
+  topright.style.display = "flex";
+  topleft.style.display = "flex";
   isButtonsVisible = true;
   setTimeout(() => {
     toggleClassElements("statusMenu", "none");
     leftButtons.style.display = "none";
+    bottomButtons.style.display = "none";
+    bottomright.style.display = "none";
+    bottomleft.style.display = "none";
+    topright.style.display = "none";
+    topleft.style.display = "none";
     isButtonsVisible = false;
   }, 10000);
 }
