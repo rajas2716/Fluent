@@ -28,7 +28,7 @@
 - Clone this repo
 
 ```bash
-git clone https://github.com/rajas2716/Video---Chat-Application.git
+git clone https://github.com/rajas2716/Fluent.git
 cd Fluent
 ```
 ## Install dependencies
