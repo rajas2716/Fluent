@@ -2,7 +2,14 @@
 
 <br>
 
-Powered by `WebRTC` using google Stun
+## Agile methodology (Timeline shown)
+
+1. Week-1 : Worked on creating server using express and using webrtc to enable camera and mic
+2. Week-2 : Adding screen-recording , screen-sharing and whiteboard in the app.
+3. Week-3 : Adjusting to update chat feature announced. Added chat feature while meeting
+4. Week-4 : Working on chat feature and preparing video for app demonstration. 
+
+## Powered by `WebRTC` using google Stun
 
 [![webrtc](www/images/webrtc.png)](https://fluent-video.herokuapp.com/)
 
@@ -12,9 +19,9 @@ Open the app in one of following **supported browser**
 
 [![browsers](www/images/browsers.png)](https://fluent-video.herokuapp.com/)
 
-[Hosted App](https://fluent-video.herokuapp.com/)
+## [Hosted App](https://fluent-video.herokuapp.com/)
 
-[Youtube Video](https://youtu.be/fYckR9TRPAI)
+## [Youtube Video](https://youtu.be/fYckR9TRPAI)
 
 <br>
 
