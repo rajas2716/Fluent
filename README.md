@@ -78,4 +78,4 @@ npm start
 
 - Open http://localhost:3000 in browser
 
-<p align="center"> Made with ❤️ by <a href="https://www.linkedin.com/in/rajas-p-05b2a3144/">Rajas Paunikar</a></p>
+<p align="center"> Made by <a href="https://www.linkedin.com/in/rajas-p-05b2a3144/">Rajas Paunikar</a></p>
