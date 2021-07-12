@@ -11,8 +11,8 @@
     "type": "git",
     "url": "git+https://github.com/rajas2716/Video---Chat-Application"
   },
-  "author": "Miroslav Pejic",
-  "license": "AGPL-3.0",
+  "author": "Rajas Paunikar",
+  "license": "MIT",
   "homepage": "https://github.com/rajas2716/Video---Chat-Application",
   "dependencies": {
     "compression": "^1.7.4",

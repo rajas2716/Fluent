@@ -1,8 +1,4 @@
-
-"use strict"; // https://www.w3schools.com/js/js_strict.asp
-
-require("dotenv").config(); //Loads all the env variables into process environment
-
+"use strict"; // Strict mode enabled
 const compression = require("compression");
 const express = require("express");
 const path = require("path");
@@ -12,10 +8,8 @@ const http = require("http");
 const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server().listen(server);
-const ngrok = require("ngrok");
 
-let API_KEY_SECRET = process.env.API_KEY_SECRET || "mirotalk_default_secret";
-let PORT = process.env.PORT || 3000; // signalingServerPort
+let PORT = 3000; // signalingServerPort
 let localHost = "http://localhost:" + PORT; // http
 let channels = {}; // collect channels
 let sockets = {}; // collect sockets
@@ -87,64 +81,9 @@ app.get("/join/*", (req, res) => {
   }
 });
 
-/**
-  MIROTALK API v1
-  The response will give you a entrypoint / Room URL for your meeting.
-*/
-app.post(["/api/v1/meeting"], (req, res) => {
-  // check if user was authorized for the api call
-  let authorization = req.headers.authorization;
-  if (authorization != API_KEY_SECRET) {
-    logme("Mirotalk get meeting - Unauthorized", {
-      header: req.headers,
-      body: req.body,
-    });
-    return res.status(403).json({ error: "Unauthorized!" });
-  }
-  // setup mirotalk meeting URL
-  let host = req.headers.host;
-  let meetingURL = getMeetingURL(host) + "/join/" + makeId(15);
-  res.setHeader("Content-Type", "application/json");
-  res.end(JSON.stringify({ meeting: meetingURL }));
 
-  // logme the output if all done
-  logme("Mirotalk get meeting - Authorized", {
-    header: req.headers,
-    body: req.body,
-    meeting: meetingURL,
-  });
-});
 
-/**
- * Get get Meeting Room URL
- * @param {*} host string
- * @returns meeting Room URL
- */
-function getMeetingURL(host) {
-  return "http" + (host.includes("localhost") ? "" : "s") + "://" + host;
-}
-
-/**
- * Generate random Id
- * @param {*} length int
- * @returns random id
- */
-function makeId(length) {
-  let result = "";
-  let characters =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  let charactersLength = characters.length;
-  for (let i = 0; i < length; i++) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength));
-  }
-  return result;
-}
-// end of MIROTALK API v1
-
-/**
- * You should probably use a different stun-turn server
- * doing commercial stuff, also see:
- *
+/*
  * https://gist.github.com/zziuni/3741933
  * https://www.twilio.com/docs/stun-turn
  * https://github.com/coturn/coturn
@@ -155,34 +94,13 @@ function makeId(length) {
 let iceServers = [{ urls: "stun:stun.l.google.com:19302" }];
 
 /**
- * Expose server to external with https tunnel using ngrok
- * https://ngrok.com
- */
-
-
-/**
- * Start Local Server with ngrok https tunnel (optional)
+ * Start Local Server 
  */
 server.listen(PORT, null, () => {
-  logme(
-    `%c
-
-	███████╗██╗ ██████╗ ███╗   ██╗      ███████╗███████╗██████╗ ██╗   ██╗███████╗██████╗ 
-	██╔════╝██║██╔════╝ ████╗  ██║      ██╔════╝██╔════╝██╔══██╗██║   ██║██╔════╝██╔══██╗
-	███████╗██║██║  ███╗██╔██╗ ██║█████╗███████╗█████╗  ██████╔╝██║   ██║█████╗  ██████╔╝
-	╚════██║██║██║   ██║██║╚██╗██║╚════╝╚════██║██╔══╝  ██╔══██╗╚██╗ ██╔╝██╔══╝  ██╔══██╗
-	███████║██║╚██████╔╝██║ ╚████║      ███████║███████╗██║  ██║ ╚████╔╝ ███████╗██║  ██║
-	╚══════╝╚═╝ ╚═════╝ ╚═╝  ╚═══╝      ╚══════╝╚══════╝╚═╝  ╚═╝  ╚═══╝  ╚══════╝╚═╝  ╚═╝ started...
-
-	`,
-    "font-family:monospace"
-  );
   logme("settings", {
       http: localHost,
-      api_key_secret: API_KEY_SECRET,
       iceServers: iceServers,
     });
-  // https tunnel
 });
 
 /**

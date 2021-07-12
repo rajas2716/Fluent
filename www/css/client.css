@@ -38,7 +38,7 @@
   /* common */
   --msger-top: 50%;
   --msger-left: 50%;
-  --msger-height: 680px;
+  --msger-height: 600px;
   --msger-width: 420px;
 
   /* whiteboard resize */
@@ -53,7 +53,7 @@
 
   /* neon theme default */
   --body-bg: black;
-  --msger-bg: black;
+  --msger-bg: white;
   --msger-private-bg: black;
   --left-msg-bg: #da05f3;
   --private-msg-bg: #f77070;
@@ -67,73 +67,7 @@
   --wb-hbg: #000000;
   --my-settings-label-color: limegreen;
 
-  /* dark theme
-  --body-bg: #16171b;
-  --msger-bg: #16171b;
-  --msger-private-bg: black;
-  --left-msg-bg: #222328;
-  --private-msg-bg: #f77070;
-  --right-msg-bg: #0a0b0c;
-  --box-shadow: 3px 3px 6px #0a0b0c, -3px -3px 6px #222328; 
-  --btn-bg: white;
-  --btn-color: black;
-  --btn-opc: 1;
-  --btns-left: 20px;
-  --wb-bg: #000000;
-  --wb-hbg: #000000;
-  --my-settings-label-color: limegreen;
-  */
 
-  /* forest theme
-  --body-bg: black;
-  --msger-bg: black;
-  --msger-private-bg: black;
-  --left-msg-bg: #2e3500;
-  --private-msg-bg: #f77070;
-  --right-msg-bg: #004b1c;
-  --box-shadow: 3px 3px 6px #27944f, -3px -3px 6px #14843d;
-  --btn-bg: white;
-  --btn-color: black;
-  --btn-opc: 1;
-  --btns-left: 20px;
-  --wb-bg: #000000;
-  --wb-hbg: #000000;
-  --my-settings-label-color: limegreen;
-  */
-
-  /* sky theme
-  --body-bg: black;
-  --msger-bg: black;
-  --msger-private-bg: black;
-  --left-msg-bg: #0c95b7;
-  --private-msg-bg: #f77070;
-  --right-msg-bg: #012a5f;
-  --box-shadow: 3px 3px 6px #03a5ce, -3px -3px 6px #03a5ce;
-  --btn-bg: white;
-  --btn-color: black;
-  --btn-opc: 1;
-  --btns-left: 20px;
-  --wb-bg: #000000;
-  --wb-hbg: #000000;
-  --my-settings-label-color: #03a5ce;
-  */
-
-  /* ghost theme
-  --body-bg: #16171b;
-  --msger-bg: transparent;
-  --msger-private-bg: black;
-  --left-msg-bg: rgba(0, 0, 0, 0.7);
-  --private-msg-bg: rgba(252, 110, 110, 0.7);
-  --right-msg-bg: rgba(0, 0, 0, 0.7);
-  --box-shadow: "0px"; 
-  --btn-bg: transparent;
-  --btn-color: white;
-  --btn-opc: 0.7;
-  --btns-left: 20px;
-  --wb-bg: transparent;
-  --wb-hbg: #000000;
-  --my-settings-label-color: limegreen;
-  */
 
   /* https://developer.mozilla.org/it/docs/Web/CSS/object-fit */
   --video-object-fit: cover;
@@ -151,7 +85,7 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
     Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
   background: var(--body-bg);
-  background-image: url("../images/loading.jpg");
+  background-image: url("../images/loader.gif");
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-position: center;
@@ -630,7 +564,7 @@ body {
 --------------------------------------------------------------*/
 
 .msger-draggable {
-  z-index: 10;
+  z-index: 14;
   display: none;
   position: absolute;
   /* center screen */
@@ -653,7 +587,6 @@ body {
   animation-duration: 1s;
   overflow: hidden;
   border-radius: 5px;
-  box-shadow: var(--box-shadow);
 }
 
 .msger {
