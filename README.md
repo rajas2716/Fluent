@@ -1,8 +1,24 @@
 # Fluent
 
+<br>
+
+Powered by `WebRTC` using google Stun
+
+[![webrtc](www/images/webrtc.png)](https://fluent-video.herokuapp.com/)
 
 <br>
 
+Open the app in one of following **supported browser**
+
+[![browsers](www/images/browsers.png)](https://fluent-video.herokuapp.com/)
+
+[Hosted App](https://fluent-video.herokuapp.com/)
+
+[Youtube Video](https://youtu.be/fYckR9TRPAI)
+
+<br>
+
+[![fluent](www/images/preview.png)](https://fluent-video.herokuapp.com/)
 
 ## Features
 
@@ -17,6 +33,16 @@
 - Simple collaborative whiteboard for the teachers
 - Full Screen Mode on mouse click on the Video element
 - Direct `peer-to-peer` connection ensures lowest latency thanks to `webrtc`
+
+
+[![features](www/images/features.png)](https://fluent-video.herokuapp.com/)
+
+
+
+### Unlimited participants
+
+[![participants](www/images/participants.png)](https://fluent-video.herokuapp.com/)
+
 
 ## Demo
 
@@ -44,3 +70,5 @@ npm start
 ```
 
 - Open http://localhost:3000 in browser
+
+<p align="center"> Made with ❤️ by <a href="https://www.linkedin.com/in/rajas-p-05b2a3144/">Rajas Paunikar</a></p>
