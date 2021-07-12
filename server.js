@@ -82,6 +82,54 @@ app.get("/join/*", (req, res) => {
 });
 
 
+app.post(["/api/v1/meeting"], (req, res) => {
+  // check if user was authorized for the api call
+  let authorization = req.headers.authorization;
+  if (authorization != API_KEY_SECRET) {
+    logme("Mirotalk get meeting - Unauthorized", {
+      header: req.headers,
+      body: req.body,
+    });
+    return res.status(403).json({ error: "Unauthorized!" });
+  }
+  // setup mirotalk meeting URL
+  let host = req.headers.host;
+  let meetingURL = getMeetingURL(host) + "/join/" + makeId(15);
+  res.setHeader("Content-Type", "application/json");
+  res.end(JSON.stringify({ meeting: meetingURL }));
+
+  // logme the output if all done
+  logme("Mirotalk get meeting - Authorized", {
+    header: req.headers,
+    body: req.body,
+    meeting: meetingURL,
+  });
+});
+
+/**
+ * Get get Meeting Room URL
+ * @param {*} host string
+ * @returns meeting Room URL
+ */
+function getMeetingURL(host) {
+  return "http" + (host.includes("localhost") ? "" : "s") + "://" + host;
+}
+
+/**
+ * Generate random Id
+ * @param {*} length int
+ * @returns random id
+ */
+function makeId(length) {
+  let result = "";
+  let characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let charactersLength = characters.length;
+  for (let i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
+}
 
 /*
  * https://gist.github.com/zziuni/3741933
