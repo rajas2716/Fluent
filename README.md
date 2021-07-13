@@ -4,10 +4,45 @@
 
 ## Agile methodology (Timeline shown)
 
-1. Week-1 : Worked on creating server using express and using webrtc to enable camera and mic
-2. Week-2 : Adding screen-recording , screen-sharing and whiteboard in the app.
-3. Week-3 : Adjusting to update chat feature announced. Added chat feature while meeting
-4. Week-4 : Working on chat feature and preparing video for app demonstration. 
+1. Week-1  (Sprint 1)
+-- Study different video conferencing applications.
+-- Worked on creating server using express and using webrtc to enable camera and mic.
+-- Desingning front-end web page.
+-- Implemented basic functionality.
+-- Design landing page.
+
+2. Week-2  (Sprint 2)
+-- Adding screen-recording , screen-sharing and whiteboard in the app.
+-- Review and fix bugs.
+-- Design client page.
+
+3. Week-3  (Sprint 3) (Special feature announced)
+
+-- Adjusting to update chat feature announced. Added chat feature while meeting
+-- Deploy and Test.
+-- Implement chat functionality
+
+4. Week-4  (sprint 4)
+-- Working on other features and preparing video for app demonstration. 
+-- Create documentation and README
+-- Create demo video
+
+<br>
+
+## Challenges Faced
+During the development process I faced the following challenges:
+
+1. Started learning nodesjs , react , and watched many youtube videos, which helped me to reach
+   basic functionality of the video call application.
+
+2. I explored many github repositories and they were the main help during my process of building.
+   Reading documentation was always not enough since I didn't have enough experience in creating softwares.
+
+3. I learnt how to incorporate special feature functionality in the application after many trials
+   error.
+
+4. Overall the I learnt many new skills in this program, after struggling a lot since I was a complete beginner. The engage program was quite fruitful. 
+
 
 ## Powered by `WebRTC` using google Stun
 
@@ -40,6 +75,10 @@ Open the app in one of following **supported browser**
 - Simple collaborative whiteboard for the teachers
 - Full Screen Mode on mouse click on the Video element
 - Direct `peer-to-peer` connection ensures lowest latency thanks to `webrtc`
+
+
+[![chat](www/images/chat-features.png)](https://fluent-video.herokuapp.com/)
+
 
 
 [![features](www/images/features.png)](https://fluent-video.herokuapp.com/)
