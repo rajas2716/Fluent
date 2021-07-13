@@ -4,7 +4,7 @@
 
 ## Agile methodology (Timeline shown)
 
-1. Week-1  (Sprint 1)
+**1. Week-1  (Sprint 1)**
 
 - Study different video conferencing applications.
 
@@ -16,7 +16,7 @@
 
 - Design landing page.
 
-2. Week-2  (Sprint 2)
+**2. Week-2  (Sprint 2)**
 
 - Adding screen-recording , screen-sharing and whiteboard in the app.
 
@@ -24,7 +24,7 @@
 
 - Design client page.
 
-3. Week-3  (Sprint 3) (Special feature announced)
+**3. Week-3  (Sprint 3) (Special feature announced)**
 
 - Adjusting to update chat feature announced. Added chat feature while meeting.
 
@@ -32,7 +32,7 @@
 
 - Implement chat functionality
 
-4. Week-4  (sprint 4)
+**4. Week-4  (sprint 4)**
 
 - Working on other features and preparing video for app demonstration. 
 
